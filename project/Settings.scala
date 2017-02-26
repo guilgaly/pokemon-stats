@@ -35,9 +35,6 @@ object Settings {
     val scalarx = "0.3.2"
     val scalatagsRx = "0.3.0"
     val routerx = "1.1.2"
-
-    val bootstrap = "3.3.7-1"
-    val jQuery = "3.1.1-1"
   }
 
   /**
@@ -52,8 +49,6 @@ object Settings {
   /** Dependencies only used by the JVM project */
   val jvmDependencies = Def.setting(Seq(
     "com.vmunier" %% "scalajs-scripts" % versions.scalajsScripts,
-    "org.webjars" % "font-awesome" % "4.3.0-1" % Provided,
-    "org.webjars" % "bootstrap" % versions.bootstrap % Provided,
     "com.lihaoyi" %% "utest" % versions.uTest % Test,
     "com.github.racc" % "typesafeconfig-guice" % versions.typesafeConfigGuice,
     PlayImport.ws,
@@ -72,7 +67,5 @@ object Settings {
 
   /** Dependencies for external JS libs that are bundled into a single .js file according to dependency order */
   val jsDependencies = Def.setting(Seq(
-    "org.webjars" % "jquery" % versions.jQuery / "jquery.js" minified "jquery.min.js",
-    "org.webjars" % "bootstrap" % versions.bootstrap / "bootstrap.js" minified "bootstrap.min.js" dependsOn "jquery.js"
   ))
 }
