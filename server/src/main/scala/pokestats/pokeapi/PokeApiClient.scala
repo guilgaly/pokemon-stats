@@ -21,8 +21,7 @@ trait PokeApi {
 @Singleton
 class PokeApiClient @Inject()(
     ws: WSClient,
-    @TypesafeConfig("pokestats.pokeapi.rootUrl") rootUrl: String,
-    @TypesafeConfig("pokestats.pokeapi.timeout") timeout: time.Duration)(
+    @TypesafeConfig("pokestats.pokeapi.rootUrl") rootUrl: String)(
     implicit context: ExecutionContext)
     extends PokeApi {
 
@@ -49,7 +48,6 @@ class PokeApiClient @Inject()(
   private def request(path: String) = {
     ws.url(s"$rootUrl/$path")
       .withHeaders(ACCEPT -> "application/json")
-      .withRequestTimeout(timeout.asScala)
   }
 
   private def getAndParse[A: Reader](request: WSRequest) = {
