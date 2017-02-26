@@ -6,9 +6,8 @@ import org.scalajs.dom
 import org.scalajs.dom.html.Div
 import pokestats.Api
 import pokestats.client.Ajaxer
-import pokestats.model.{PokemonDetails, PokemonSummary, TypeStats}
+import pokestats.model.{PokemonDetails, PokemonStat, PokemonSummary, TypeStats}
 import rx._
-import rx.async._
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -24,13 +23,9 @@ object PokemonDisplay {
 class PokemonDisplay(pokemonSummary: PokemonSummary) {
 
   private val pokemon = Var[Option[PokemonDetails]](None)
+  private val typeStats = Var(Seq[TypeStats]())
 
   def screen()(implicit ctx: Ctx.Owner): Rx[dom.Element] = {
-
-    val typeStats: Rx[Seq[TypeStats]] = Rx {
-      val t = loadTypeStats(pokemon()).toRx(Seq())
-      t()
-    }
 
     val pokemonData = Rx {
       displayPokemon(pokemon(), typeStats()).render
@@ -45,13 +40,13 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
   private def loadPokemon(): Unit = {
     Ajaxer[Api].getPokemon(pokemonSummary.id).call().foreach { p =>
       pokemon() = Some(p)
+      loadTypeStats(p)
     }
   }
 
-  private def loadTypeStats(poke: Option[PokemonDetails]) = {
-    poke match {
-      case Some(po) => Ajaxer[Api].getTypesStats(po.types.map(_.id)).call()
-      case None => Future.successful(Seq())
+  private def loadTypeStats(poke: PokemonDetails) = {
+    Ajaxer[Api].getTypesStats(poke.types.map(_.id)).call().foreach{ t =>
+      typeStats() = t
     }
   }
 
@@ -97,14 +92,32 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
     )
   }
   private def statsTable(poke: PokemonDetails, stats: Seq[TypeStats]) = {
+    def statRow(stat: PokemonStat) = {
+      tr(
+        td(strong(stat.name)),
+        td(stat.value),
+        for {
+          pokeType <- poke.types
+          typeStats = stats.find(_.typeId == pokeType.id)
+          typeStat = typeStats.flatMap(_.averageStats.get(stat.id)).getOrElse(0)
+        } yield td(typeStat.toString)
+      )
+    }
     row(
       h3("Stats"),
       table(cls := "u-full-width")(
-        thead(tr(th("Stat"), th("Value"))),
+        thead(tr(
+          th("Stat"),
+          th("Value"),
+          for {
+            pokeType <- poke.types
+          } yield th(pokeType.name, " avg.")
+
+        )),
         tbody(
           for {
             stat <- poke.stats
-          } yield tr(td(strong(stat.name)), td(stat.value))
+          } yield statRow(stat)
         )
       ),
       p("Stats: ", stats.size)

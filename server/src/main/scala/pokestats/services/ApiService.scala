@@ -6,8 +6,6 @@ import pokestats.Api
 import pokestats.model._
 import pokestats.pokeapi.{PokeApi, model => apim}
 
-import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{ExecutionContext, Future}
 
 class ApiService @Inject()(pokeApi: PokeApi)(
@@ -45,36 +43,6 @@ class ApiService @Inject()(pokeApi: PokeApi)(
       TypeStats(id, averageStats)
     }
   }
-
-//  override def getTypeStats(id: Int): Future[TypeStats] = {
-//    def getPokemonsForType(t: apim.Type) = {
-//      val pokemonIds = t.pokemon.map(p => p.pokemon.id)
-//      getPokemons(pokemonIds)
-//    }
-//    def averagePokemonStats(pokemons: Seq[PokemonDetails]) = {
-//      val size = pokemons.size
-//      val stats = mutable.Map[Int, ArrayBuffer[PokemonStat]]()
-//      for (p <- pokemons) {
-//        for (s <- p.stats) {
-//          if (!stats.contains(s.id)) {
-//            stats += (s.id -> ArrayBuffer())
-//          }
-//          stats(s.id) += s
-//        }
-//      }
-//      val reducedStats = stats.values.map(statsBuffer =>
-//        statsBuffer.reduce((l, r) => l.copy(value = l.value + r.value)))
-//      val averagedStats = reducedStats.map(s => s.copy(value = s.value / size))
-//      averagedStats.toSeq
-//    }
-//    val apiType = pokeApi.getType(id)
-//    val apiPokemons =
-//      apiType.flatMap(t => getPokemonsForType(t).map(details => (t, details)))
-//    val averageStats = apiPokemons.map {
-//      case (t, pokemons) => (t, averagePokemonStats(pokemons))
-//    }
-//    averageStats.map { case (t, stats) => TypeStats(t.id, t.name, stats) }
-//  }
 
   override def getTypesStats(ids: Seq[Int]): Future[Seq[TypeStats]] = {
     val futures = ids.map(id => getTypeStats(id))
