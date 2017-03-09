@@ -2,6 +2,8 @@ package pokestats.services
 
 import javax.inject.Inject
 
+import com.danielasfregola.twitter4s.TwitterClients
+import com.danielasfregola.twitter4s.entities.enums.ResultType
 import play.api.cache.CacheApi
 import pokestats.Api
 import pokestats.model._
@@ -11,8 +13,10 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
-class ApiService @Inject()(pokeApi: PokeApi, cache: CacheApi)(
-    implicit context: ExecutionContext)
+class ApiService @Inject()(
+    pokeApi: PokeApi,
+    twitter: TwitterClients,
+    cache: CacheApi)(implicit context: ExecutionContext)
     extends Api {
 
   private def cacheKey(str: String) =
@@ -52,6 +56,12 @@ class ApiService @Inject()(pokeApi: PokeApi, cache: CacheApi)(
   override def getTypesStats(ids: Seq[Int]): Future[Seq[TypeStats]] = {
     val futures = ids.map(id => getTypeStats(id))
     Future.sequence(futures)
+  }
+
+  override def getRelatedTweets(pokemonName: String): Future[Seq[String]] = {
+    twitter
+      .searchTweet(query = s"#$pokemonName", result_type = ResultType.Recent)
+      .map(_.data.statuses.map(_.text))
   }
 
   private def getPokemonsByType(id: Int): Future[Seq[PokemonDetails]] = {

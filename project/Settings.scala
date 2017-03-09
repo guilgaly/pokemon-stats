@@ -29,6 +29,7 @@ object Settings {
     val uTest = "0.4.4"
     val typesafeConfigGuice = "0.0.3"
     val scalajsScripts = "1.0.0"
+    val twitter4s = "5.0"
 
     val scalaDom = "0.9.1"
     val scalatags = "0.6.3"
@@ -52,7 +53,8 @@ object Settings {
     "com.lihaoyi" %% "utest" % versions.uTest % Test,
     "com.github.racc" % "typesafeconfig-guice" % versions.typesafeConfigGuice,
     PlayImport.ws,
-    PlayImport.cache
+    PlayImport.cache,
+    "com.danielasfregola" %% "twitter4s" % versions.twitter4s
   ))
 
   /** Dependencies only used by the JS project (note the use of %%% instead of %%) */

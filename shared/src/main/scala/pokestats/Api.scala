@@ -10,4 +10,5 @@ trait Api {
   def getPokemons(ids: Seq[Int]): Future[Seq[PokemonDetails]]
   def getTypeStats(id: Int): Future[TypeStats]
   def getTypesStats(ids: Seq[Int]): Future[Seq[TypeStats]]
+  def getRelatedTweets(pokemonName: String): Future[Seq[String]]
 }

@@ -24,14 +24,16 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
 
   private val pokemon = Var[Option[PokemonDetails]](None)
   private val typeStats = Var(Seq[TypeStats]())
+  private val relatedTweets = Var(Seq[String]())
 
   def screen()(implicit ctx: Ctx.Owner): Rx[dom.Element] = {
 
     val pokemonData = Rx {
-      displayPokemon(pokemon(), typeStats()).render
+      displayPokemon(pokemon(), typeStats(), relatedTweets()).render
     }
 
     loadPokemon()
+    loadRelatedTweets()
     Rx {
       div(pokemonData).render
     }
@@ -44,30 +46,42 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
     }
   }
 
-  private def loadTypeStats(poke: PokemonDetails) = {
-    Ajaxer[Api].getTypesStats(poke.types.map(_.id)).call().foreach{ t =>
+  private def loadTypeStats(poke: PokemonDetails): Unit = {
+    Ajaxer[Api].getTypesStats(poke.types.map(_.id)).call().foreach { t =>
       typeStats() = t
+    }
+  }
+
+  private def loadRelatedTweets(): Unit = {
+    Ajaxer[Api].getRelatedTweets(pokemonSummary.name).call().foreach { t =>
+      relatedTweets() = t
     }
   }
 
   private def displayPokemon(
       maybeDetails: Option[PokemonDetails],
-      stats: Seq[TypeStats]) = {
+      stats: Seq[TypeStats],
+      tweets: Seq[String]) = {
     maybeDetails match {
-      case Some(poke) => displayFromDetails(poke, stats)
+      case Some(poke) => displayFromDetails(poke, stats, tweets)
       case None => displayFromSummary()
     }
   }
 
   private def displayFromSummary() = {
-    page(row(h2(pokemonSummary.name)))
+    page(
+      row(h2(pokemonSummary.name)))
   }
 
-  private def displayFromDetails(poke: PokemonDetails, stats: Seq[TypeStats]) = {
+  private def displayFromDetails(
+      poke: PokemonDetails,
+      stats: Seq[TypeStats],
+      tweets: Seq[String]) = {
     page(
       nameHeader(poke),
       basicInfo(poke),
-      statsTable(poke, stats)
+      statsTable(poke, stats),
+      tweetsList(poke.name, tweets)
     )
   }
 
@@ -99,28 +113,41 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
         for {
           pokeType <- poke.types
           typeStats = stats.find(_.typeId == pokeType.id)
-          typeStat = typeStats.flatMap(_.averageStats.get(stat.id)).getOrElse(0)
+          typeStat = typeStats
+            .flatMap(_.averageStats.get(stat.id))
+            .getOrElse(0)
         } yield td(typeStat.toString)
       )
     }
     row(
       h3("Stats"),
       table(cls := "u-full-width")(
-        thead(tr(
-          th("Stat"),
-          th("Value"),
-          for {
-            pokeType <- poke.types
-          } yield th(pokeType.name, " avg.")
-
-        )),
+        thead(
+          tr(
+            th("Stat"),
+            th("Value"),
+            for {
+              pokeType <- poke.types
+            } yield th(pokeType.name, " avg.")
+          )),
         tbody(
           for {
             stat <- poke.stats
           } yield statRow(stat)
         )
-      ),
-      p("Stats: ", stats.size)
+      )
+    )
+  }
+  private def tweetsList(pokemonName: String, tweets: Seq[String]) = {
+    row(
+      h3(s"Tweets about #$pokemonName"),
+      table(
+        tbody(
+          for {
+            tweet <- tweets
+          } yield tr(td(tweet))
+        )
+      )
     )
   }
 }
