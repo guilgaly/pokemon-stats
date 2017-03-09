@@ -58,10 +58,11 @@ class ApiService @Inject()(
     Future.sequence(futures)
   }
 
-  override def getRelatedTweets(pokemonName: String): Future[Seq[String]] = {
+  override def getRelatedTweets(pokemonName: String): Future[Seq[Tweet]] = {
     twitter
       .searchTweet(query = s"#$pokemonName", result_type = ResultType.Recent)
-      .map(_.data.statuses.map(_.text))
+      .map(_.data.statuses.map(t =>
+        Tweet(t.user.map(_.name).getOrElse("Unknown"), t.text)))
   }
 
   private def getPokemonsByType(id: Int): Future[Seq[PokemonDetails]] = {

@@ -1,6 +1,6 @@
 package pokestats
 
-import pokestats.model.{PokemonDetails, PokemonSummary, TypeStats}
+import pokestats.model.{PokemonDetails, PokemonSummary, Tweet, TypeStats}
 
 import scala.concurrent.Future
 
@@ -10,5 +10,5 @@ trait Api {
   def getPokemons(ids: Seq[Int]): Future[Seq[PokemonDetails]]
   def getTypeStats(id: Int): Future[TypeStats]
   def getTypesStats(ids: Seq[Int]): Future[Seq[TypeStats]]
-  def getRelatedTweets(pokemonName: String): Future[Seq[String]]
+  def getRelatedTweets(pokemonName: String): Future[Seq[Tweet]]
 }

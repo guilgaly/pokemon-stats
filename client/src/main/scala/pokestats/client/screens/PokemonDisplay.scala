@@ -6,7 +6,7 @@ import org.scalajs.dom
 import org.scalajs.dom.html.Div
 import pokestats.Api
 import pokestats.client.Ajaxer
-import pokestats.model.{PokemonDetails, PokemonStat, PokemonSummary, TypeStats}
+import pokestats.model._
 import rx._
 
 import scala.concurrent.Future
@@ -24,7 +24,7 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
 
   private val pokemon = Var[Option[PokemonDetails]](None)
   private val typeStats = Var(Seq[TypeStats]())
-  private val relatedTweets = Var(Seq[String]())
+  private val relatedTweets = Var(Seq[Tweet]())
 
   def screen()(implicit ctx: Ctx.Owner): Rx[dom.Element] = {
 
@@ -61,7 +61,7 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
   private def displayPokemon(
       maybeDetails: Option[PokemonDetails],
       stats: Seq[TypeStats],
-      tweets: Seq[String]) = {
+      tweets: Seq[Tweet]) = {
     maybeDetails match {
       case Some(poke) => displayFromDetails(poke, stats, tweets)
       case None => displayFromSummary()
@@ -76,7 +76,7 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
   private def displayFromDetails(
       poke: PokemonDetails,
       stats: Seq[TypeStats],
-      tweets: Seq[String]) = {
+      tweets: Seq[Tweet]) = {
     page(
       nameHeader(poke),
       basicInfo(poke),
@@ -138,14 +138,14 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
       )
     )
   }
-  private def tweetsList(pokemonName: String, tweets: Seq[String]) = {
+  private def tweetsList(pokemonName: String, tweets: Seq[Tweet]) = {
     row(
       h3(s"Tweets about #$pokemonName"),
       table(
         tbody(
           for {
             tweet <- tweets
-          } yield tr(td(tweet))
+          } yield tr(td(tweet.author), td(tweet.text))
         )
       )
     )
