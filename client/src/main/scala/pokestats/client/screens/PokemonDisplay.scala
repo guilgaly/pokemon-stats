@@ -62,81 +62,77 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
       maybeDetails: Option[PokemonDetails],
       stats: Seq[TypeStats],
       tweets: Seq[Tweet]) = {
-    maybeDetails match {
-      case Some(poke) => displayFromDetails(poke, stats, tweets)
-      case None => displayFromSummary()
-    }
-  }
-
-  private def displayFromSummary() = {
     page(
-      row(h2(pokemonSummary.name)))
-  }
-
-  private def displayFromDetails(
-      poke: PokemonDetails,
-      stats: Seq[TypeStats],
-      tweets: Seq[Tweet]) = {
-    page(
-      nameHeader(poke),
-      basicInfo(poke),
-      statsTable(poke, stats),
-      tweetsList(poke.name, tweets)
+      row(h2(pokemonSummary.name)),
+      basicInfo(maybeDetails),
+      statsTable(maybeDetails, stats),
+      tweetsList(pokemonSummary.name, tweets)
     )
   }
 
   private def nameHeader(poke: PokemonDetails) = {
     row(h2(poke.name))
   }
-  private def basicInfo(poke: PokemonDetails) = {
-    val typ = poke.types.map(_.name).mkString(", ")
-    row(
-      columns(OneColumn)(img(src := poke.sprite)),
-      columns(ElevenColumns)(
-        // format: off
-        p(
-          strong("ID: "), poke.id, br,
-          strong("Type(s): "), typ, br,
-          strong("Height: "),
-          poke.height, br, strong("Weight: "),
-          poke.weight
+  private def basicInfo(maybeDetails: Option[PokemonDetails]) = {
+    maybeDetails
+      .map { poke =>
+        val typ = poke.types.map(_.name).mkString(", ")
+        row(
+          columns(OneColumn)(img(src := poke.sprite)),
+          columns(ElevenColumns)(
+            // format: off
+            p(
+              strong("ID: "), poke.id, br,
+              strong("Type(s): "), typ, br,
+              strong("Height: "),
+              poke.height, br, strong("Weight: "),
+              poke.weight
+            )
+            // format: on
+          )
         )
-        // format: on
-      )
-    )
+      }
+      .getOrElse(row())
   }
-  private def statsTable(poke: PokemonDetails, stats: Seq[TypeStats]) = {
-    def statRow(stat: PokemonStat) = {
-      tr(
-        td(strong(stat.name)),
-        td(stat.value),
-        for {
-          pokeType <- poke.types
-          typeStats = stats.find(_.typeId == pokeType.id)
-          typeStat = typeStats
-            .flatMap(_.averageStats.get(stat.id))
-            .getOrElse(0)
-        } yield td(typeStat.toString)
-      )
-    }
-    row(
-      h3("Stats"),
-      table(cls := "u-full-width")(
-        thead(
+  private def statsTable(
+      maybeDetails: Option[PokemonDetails],
+      stats: Seq[TypeStats]) = {
+    maybeDetails
+      .map { poke =>
+        def statRow(stat: PokemonStat) = {
           tr(
-            th("Stat"),
-            th("Value"),
+            td(strong(stat.name)),
+            td(stat.value),
             for {
               pokeType <- poke.types
-            } yield th(pokeType.name, " avg.")
-          )),
-        tbody(
-          for {
-            stat <- poke.stats
-          } yield statRow(stat)
+              typeStats = stats.find(_.typeId == pokeType.id)
+              typeStat = typeStats
+                .flatMap(_.averageStats.get(stat.id))
+                .getOrElse(0)
+            } yield td(typeStat.toString)
+          )
+        }
+
+        row(
+          h3("Stats"),
+          table(cls := "u-full-width")(
+            thead(
+              tr(
+                th("Stat"),
+                th("Value"),
+                for {
+                  pokeType <- poke.types
+                } yield th(pokeType.name, " avg.")
+              )),
+            tbody(
+              for {
+                stat <- poke.stats
+              } yield statRow(stat)
+            )
+          )
         )
-      )
-    )
+      }
+      .getOrElse(row())
   }
   private def tweetsList(pokemonName: String, tweets: Seq[Tweet]) = {
     row(
