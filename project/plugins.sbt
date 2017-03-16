@@ -9,3 +9,6 @@ addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.3")
 addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0")
 
+// Code coverage
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
+addSbtPlugin("com.codacy" % "sbt-codacy-coverage" % "1.3.7")
