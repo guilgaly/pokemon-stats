@@ -3,6 +3,12 @@ scala:
   - 2.11.8
 jdk:
   - oraclejdk8
+install:
+  - . $HOME/.nvm/nvm.sh
+  - nvm install stable
+  - nvm use stable
+  - npm install
+  - npm install jsdom
 script:
   - sbt clean coverage test
 after_success:
