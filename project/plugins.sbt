@@ -11,4 +11,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0")
 
 // Code coverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
-addSbtPlugin("com.codacy" % "sbt-codacy-coverage" % "1.3.7")
+addSbtPlugin("com.codacy" % "sbt-codacy-coverage" % "1.3.8")
