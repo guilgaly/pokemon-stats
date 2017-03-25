@@ -8,9 +8,9 @@ import pokestats.pokeapi.PokeApi
 
 import scala.concurrent.ExecutionContext
 
-class Test @Inject()(pokeApi: PokeApi, api: Api)(implicit context: ExecutionContext)
+class Test @Inject()(action: DefaultActionBuilder, api: Api)(implicit context: ExecutionContext)
     extends Controller {
-  def test = Action.async {
+  def test = action.async {
 //    val pokeType = pokeApi.getType(1)
 //    pokeType.map { p =>
 //      Ok(p.toString)
