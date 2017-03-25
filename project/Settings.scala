@@ -28,7 +28,7 @@ object Settings {
     val uPickle = "0.4.4"
     val uTest = "0.4.4"
     val typesafeConfigGuice = "0.0.3"
-    val scalajsScripts = "1.0.0"
+    val scalajsScripts = "1.1.0"
     val twitter4s = "5.0"
 
     val scalaDom = "0.9.1"
