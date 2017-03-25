@@ -53,7 +53,10 @@ lazy val server = (project in file("server"))
     scalaVersion := Settings.versions.scala,
     scalacOptions ++= Settings.scalacOptions,
     libraryDependencies ++= Settings.jvmDependencies.value,
-    commands += ReleaseCmd,
+    commands ++= Seq(
+        ReleaseCmd,
+        StageReleaseCmd
+    ),
     // triggers scalaJSPipeline when using compile or continuous compilation
     compile in Compile <<= (compile in Compile) dependsOn scalaJSPipeline,
     // connect to the client project
@@ -68,16 +71,21 @@ lazy val server = (project in file("server"))
   .aggregate(clients.map(projectToRef): _*)
   .dependsOn(sharedJVM)
 
-// Command for building a release
-lazy val ReleaseCmd = Command.command("release") {
-  state => "set elideOptions in client := Seq(\"-Xelide-below\", \"WARNING\")" ::
-    "client/clean" ::
-    "client/test" ::
-    "server/clean" ::
-    "server/test" ::
-    "server/dist" ::
-    "set elideOptions in client := Seq()" ::
-    state
+// Command for building a release package which will be deployed
+lazy val ReleaseCmd = customRelease("packageRelease", "dist")
+
+// Command for building a release which will be run in place
+lazy val StageReleaseCmd = customRelease("stageRelease", "stage")
+
+def customRelease(releaseCmd: String, buildCmd: String) = Command.command(releaseCmd) {
+    state => "set elideOptions in client := Seq(\"-Xelide-below\", \"WARNING\")" ::
+      "client/clean" ::
+      "client/test" ::
+      "server/clean" ::
+      "server/test" ::
+      s"server/$buildCmd" ::
+      "set elideOptions in client := Seq()" ::
+      state
 }
 
 // lazy val root = (project in file(".")).aggregate(client, server)
