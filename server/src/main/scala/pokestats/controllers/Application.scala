@@ -1,7 +1,5 @@
 package pokestats.controllers
 
-import java.nio.ByteBuffer
-
 import pokestats.UPickleSerializers.pickler
 import javax.inject.Inject
 
@@ -17,17 +15,20 @@ object Router
     extends UPickleSerializers
     with autowire.Server[String, pickler.Reader, pickler.Writer]
 
-class Application @Inject()(api: Api)(
+class Application @Inject()(
+    action: DefaultActionBuilder,
+    parsers: PlayBodyParsers,
+    api: Api)(
     implicit context: ExecutionContext,
     config: Configuration,
     env: Environment)
     extends Controller {
 
-  def index(path: String) = Action {
+  def index(path: String) = action {
     Ok(views.html.pokestats.index("PokéStats"))
   }
 
-  def autowireApi(path: String) = Action.async(parse.tolerantText) {
+  def autowireApi(path: String) = action.async(parsers.tolerantText) {
     implicit request =>
       println(s"Request path: $path")
 
