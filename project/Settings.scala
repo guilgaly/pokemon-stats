@@ -37,7 +37,7 @@ object Settings {
     val scalatags = "0.6.3"
     val scalarx = "0.3.2"
     val scalatagsRx = "0.3.0"
-    val routerx = "1.1.3-SNAPSHOT"
+    val routerx = "1.1.3"
   }
 
   /**

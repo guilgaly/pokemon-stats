@@ -24,6 +24,7 @@ lazy val client: Project = (project in file("client"))
     version := Settings.version,
     scalaVersion := Settings.versions.scala,
     scalacOptions ++= Settings.scalacOptions,
+    resolvers += Resolver.bintrayRepo("guilgaly", "maven"),
     libraryDependencies ++= Settings.scalajsDependencies.value,
     // by default we do development build, no eliding
     elideOptions := Seq(),
@@ -52,6 +53,7 @@ lazy val server = (project in file("server"))
     version := Settings.version,
     scalaVersion := Settings.versions.scala,
     scalacOptions ++= Settings.scalacOptions,
+    resolvers += Resolver.bintrayRepo("guilgaly", "maven"),
     libraryDependencies ++= Settings.jvmDependencies.value,
     commands ++= Seq(
         ReleaseCmd,
