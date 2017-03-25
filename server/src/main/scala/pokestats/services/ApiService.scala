@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import com.danielasfregola.twitter4s.TwitterClients
 import com.danielasfregola.twitter4s.entities.enums.ResultType
-import play.api.cache.CacheApi
+import play.api.cache.SyncCacheApi
 import pokestats.Api
 import pokestats.model._
 import pokestats.pokeapi.{PokeApi, model => apim}
@@ -16,7 +16,7 @@ import scala.reflect.ClassTag
 class ApiService @Inject()(
     pokeApi: PokeApi,
     twitter: TwitterClients,
-    cache: CacheApi)(implicit context: ExecutionContext)
+    cache: SyncCacheApi)(implicit context: ExecutionContext)
     extends Api {
 
   private def cacheKey(str: String) =
