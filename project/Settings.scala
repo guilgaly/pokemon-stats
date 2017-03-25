@@ -23,7 +23,8 @@ object Settings {
 
   /** Declare global dependency versions here to avoid mismatches in multi part dependencies */
   object versions {
-    val scala = "2.11.8"
+    val scala = "2.12.1"
+
     val autowire = "0.2.6"
     val uPickle = "0.4.4"
     val uTest = "0.4.4"
@@ -35,7 +36,7 @@ object Settings {
     val scalatags = "0.6.3"
     val scalarx = "0.3.2"
     val scalatagsRx = "0.3.0"
-    val routerx = "1.1.2"
+    val routerx = "1.1.3-SNAPSHOT"
   }
 
   /**
