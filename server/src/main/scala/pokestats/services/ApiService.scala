@@ -93,7 +93,7 @@ class ApiService @Inject()(
       expiration: Duration = Duration.Inf)(orElse: => Future[A]): Future[A] = {
     cache.get[A](key).map(Future.successful).getOrElse {
       val value = orElse
-      value onSuccess { case result => cache.set(key, result, expiration) }
+      value.foreach(result => cache.set(key, result, expiration))
       value
     }
   }
