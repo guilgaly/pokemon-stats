@@ -52,6 +52,7 @@ object Settings {
     "com.vmunier" %% "scalajs-scripts" % versions.scalajsScripts,
     "com.lihaoyi" %% "utest" % versions.uTest % Test,
     "com.github.racc" % "typesafeconfig-guice" % versions.typesafeConfigGuice,
+    PlayImport.guice,
     PlayImport.ws,
     PlayImport.cache,
     "com.danielasfregola" %% "twitter4s" % versions.twitter4s
