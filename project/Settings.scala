@@ -27,10 +27,11 @@ object Settings {
 
     val autowire = "0.2.6"
     val uPickle = "0.4.4"
-    val uTest = "0.4.4"
     val typesafeConfigGuice = "0.0.3"
     val scalajsScripts = "1.1.0"
     val twitter4s = "5.0"
+    val scalatest = "3.0.1"
+    val scalatestPlusPlay = "3.0.0-M2"
 
     val scalaDom = "0.9.1"
     val scalatags = "0.6.3"
@@ -51,12 +52,13 @@ object Settings {
   /** Dependencies only used by the JVM project */
   val jvmDependencies = Def.setting(Seq(
     "com.vmunier" %% "scalajs-scripts" % versions.scalajsScripts,
-    "com.lihaoyi" %% "utest" % versions.uTest % Test,
+    "org.scalatestplus.play" %% "scalatestplus-play" % versions.scalatestPlusPlay % Test,
     "com.github.racc" % "typesafeconfig-guice" % versions.typesafeConfigGuice,
     PlayImport.guice,
     PlayImport.ws,
     PlayImport.cache,
-    "com.danielasfregola" %% "twitter4s" % versions.twitter4s
+    "com.danielasfregola" %% "twitter4s" % versions.twitter4s,
+    "org.skyscreamer" % "jsonassert" % "1.5.0" % Test
   ))
 
   /** Dependencies only used by the JS project (note the use of %%% instead of %%) */
@@ -66,7 +68,7 @@ object Settings {
     "com.lihaoyi" %%% "scalatags" % versions.scalatags,
     "com.timushev" %%% "scalatags-rx" % versions.scalatagsRx,
     "com.stabletechs" %%% "routerx" % versions.routerx,
-    "com.lihaoyi" %%% "utest" % versions.uTest % Test
+    "org.scalatest" %% "scalatest" % versions.scalatest % Test
   ))
 
   /** Dependencies for external JS libs that are bundled into a single .js file according to dependency order */
