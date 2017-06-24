@@ -22,7 +22,7 @@ class Application @Inject()(
     implicit context: ExecutionContext,
     config: Configuration,
     env: Environment)
-    extends Controller {
+    extends InjectedController {
 
   def index(path: String) = action {
     Ok(views.html.pokestats.index("PokéStats"))

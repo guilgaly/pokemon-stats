@@ -1,17 +1,14 @@
 package pokestats.client.screens
 
-import Common._
 import autowire._
 import org.scalajs.dom
-import org.scalajs.dom.html.Div
 import pokestats.Api
 import pokestats.client.Ajaxer
+import pokestats.client.screens.Common._
 import pokestats.model._
 import rx._
 
-import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 import scalatags.rx.all._
 
@@ -70,9 +67,6 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
     )
   }
 
-  private def nameHeader(poke: PokemonDetails) = {
-    row(h2(poke.name))
-  }
   private def basicInfo(maybeDetails: Option[PokemonDetails]) = {
     maybeDetails
       .map { poke =>
@@ -94,6 +88,7 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
       }
       .getOrElse(row())
   }
+
   private def statsTable(
       maybeDetails: Option[PokemonDetails],
       stats: Seq[TypeStats]) = {
@@ -134,6 +129,7 @@ class PokemonDisplay(pokemonSummary: PokemonSummary) {
       }
       .getOrElse(row())
   }
+
   private def tweetsList(pokemonName: String, tweets: Seq[Tweet]) = {
     row(
       h3(s"Tweets about #$pokemonName"),

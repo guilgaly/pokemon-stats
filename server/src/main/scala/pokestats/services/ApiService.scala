@@ -2,7 +2,7 @@ package pokestats.services
 
 import javax.inject.Inject
 
-import com.danielasfregola.twitter4s.TwitterClients
+import com.danielasfregola.twitter4s.RestClients
 import com.danielasfregola.twitter4s.entities.enums.ResultType
 import play.api.cache.SyncCacheApi
 import pokestats.Api
@@ -15,7 +15,7 @@ import scala.reflect.ClassTag
 
 class ApiService @Inject()(
     pokeApi: PokeApi,
-    twitter: TwitterClients,
+    twitter: RestClients,
     cache: SyncCacheApi)(implicit context: ExecutionContext)
     extends Api {
 
