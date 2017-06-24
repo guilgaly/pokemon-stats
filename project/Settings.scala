@@ -23,18 +23,18 @@ object Settings {
 
   /** Declare global dependency versions here to avoid mismatches in multi part dependencies */
   object versions {
-    val scala = "2.12.1"
+    val scala = "2.12.2"
 
     val autowire = "0.2.6"
     val uPickle = "0.4.4"
     val typesafeConfigGuice = "0.0.3"
     val scalajsScripts = "1.1.0"
-    val twitter4s = "5.0"
-    val scalatest = "3.0.1"
-    val scalatestPlusPlay = "3.0.0-M2"
+    val twitter4s = "5.1"
+    val scalatest = "3.0.3"
+    val scalatestPlusPlay = "3.0.0"
 
-    val scalaDom = "0.9.1"
-    val scalatags = "0.6.3"
+    val scalaDom = "0.9.2"
+    val scalatags = "0.6.5"
     val scalarx = "0.3.2"
     val scalatagsRx = "0.3.0"
     val routerx = "1.1.3"
@@ -56,7 +56,7 @@ object Settings {
     "com.github.racc" % "typesafeconfig-guice" % versions.typesafeConfigGuice,
     PlayImport.guice,
     PlayImport.ws,
-    PlayImport.cache,
+    PlayImport.ehcache,
     "com.danielasfregola" %% "twitter4s" % versions.twitter4s,
     "org.skyscreamer" % "jsonassert" % "1.5.0" % Test
   ))
