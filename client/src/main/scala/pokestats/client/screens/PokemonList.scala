@@ -3,6 +3,7 @@ package pokestats.client.screens
 import autowire._
 import org.scalajs.dom
 import pokestats.Api
+import pokestats.client.screens.Common._
 import pokestats.client.{Ajaxer, Client, PokemonDetailsScreen}
 import pokestats.model.PokemonSummary
 import rx._
@@ -10,7 +11,6 @@ import rx._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scalatags.JsDom.all._
 import scalatags.rx.all._
-import Common._
 
 object PokemonList {
 
@@ -55,7 +55,7 @@ object PokemonList {
         label = pokemon.name + " [" + pokemon.id + "]"
       } yield
         li(
-          v(label, onclick := { () =>
+          alink(label, onclick := { () =>
             Client.router.goto(PokemonDetailsScreen(pokemon))
           })
         )

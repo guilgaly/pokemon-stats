@@ -1,7 +1,5 @@
 package pokestats.pokeapi
 
-import pokestats.util.DurationConverters._
-import java.time
 import javax.inject.{Inject, Singleton}
 
 import com.github.racc.tscg.TypesafeConfig
@@ -41,13 +39,13 @@ class PokeApiClient @Inject()(
 
   private def list[A: Reader](path: String) = {
     // Always get the full list by passing a very high limit
-    val req = request(path).withQueryString("limit" -> "999999")
+    val req = request(path).withQueryStringParameters("limit" -> "999999")
     getAndParse[A](req)
   }
 
   private def request(path: String) = {
     ws.url(s"$rootUrl/$path")
-      .withHeaders(ACCEPT -> "application/json")
+      .withHttpHeaders(ACCEPT -> "application/json")
   }
 
   private def getAndParse[A: Reader](request: WSRequest) = {

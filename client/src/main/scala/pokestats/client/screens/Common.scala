@@ -1,22 +1,19 @@
 package pokestats.client.screens
 
-import org.scalajs.dom.html.Div
-
-import scalatags.JsDom.all._
 import pokestats.client._
 
-import scalatags.JsDom.TypedTag
+import scalatags.JsDom.all._
 
 object Common {
 
-  val v: HtmlTag = a(href := "javascript:void(0)")
+  val alink: HtmlTag = a(href := "javascript:void(0)")
 
   def row: HtmlTag = div(cls := "row")
 
   def columns(columns: Columns): HtmlTag = div(cls := columns.cssClass)
 
   lazy val nav: HtmlTag = row(
-    columns(TwoColumns)(v("All Pokémons", onclick := { () =>
+    columns(TwoColumns)(alink("All Pokémons", onclick := { () =>
       Client.router.goto(PokemonListScreen)
     }))
   )

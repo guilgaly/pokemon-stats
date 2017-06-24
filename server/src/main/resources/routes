@@ -9,8 +9,6 @@ GET     /assets/*file                     controllers.Assets.versioned(path="/pu
 # API
 POST    /api/*path                        pokestats.controllers.Application.autowireApi(path: String)
 
-GET     /test                             pokestats.controllers.Test.test
-
 # WebApp
 GET     /                                 pokestats.controllers.Application.index(path="")
 GET     /*path                            pokestats.controllers.Application.index(path: String)
