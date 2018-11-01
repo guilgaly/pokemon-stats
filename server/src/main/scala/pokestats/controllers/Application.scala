@@ -4,7 +4,7 @@ import pokestats.UPickleSerializers.pickler
 import javax.inject.Inject
 
 import akka.util.ByteString
-import play.api.{Configuration, Environment}
+import play.api.Configuration
 import play.api.http.HttpEntity
 import play.api.mvc._
 import pokestats.{Api, UPickleSerializers}
@@ -20,8 +20,7 @@ class Application @Inject()(
     parsers: PlayBodyParsers,
     api: Api)(
     implicit context: ExecutionContext,
-    config: Configuration,
-    env: Environment)
+    config: Configuration)
     extends InjectedController {
 
   def index(path: String) = action {
