@@ -1,5 +1,6 @@
 import sbt._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import play.sbt.PlayImport
 
 /**
@@ -23,18 +24,18 @@ object Settings {
 
   /** Declare global dependency versions here to avoid mismatches in multi part dependencies */
   object versions {
-    val scala = "2.12.2"
+    val scala = "2.12.7"
 
     val autowire = "0.2.6"
     val uPickle = "0.4.4"
-    val typesafeConfigGuice = "0.0.3"
-    val scalajsScripts = "1.1.0"
-    val twitter4s = "5.1"
-    val scalatest = "3.0.3"
-    val scalatestPlusPlay = "3.0.0"
+    val typesafeConfigGuice = "0.1.0"
+    val scalajsScripts = "1.1.2"
+    val twitter4s = "5.5"
+    val scalatest = "3.0.5"
+    val scalatestPlusPlay = "3.1.2"
 
-    val scalaDom = "0.9.2"
-    val scalatags = "0.6.5"
+    val scalaDom = "0.9.6"
+    val scalatags = "0.6.7"
     val scalarx = "0.3.2"
     val scalatagsRx = "0.3.0"
     val routerx = "1.1.3"

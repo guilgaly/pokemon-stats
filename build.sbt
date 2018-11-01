@@ -1,21 +1,25 @@
 import sbt.Keys._
 import sbt.Project.projectToRef
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 // a special crossProject for configuring a JS/JVM/shared structure
-lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
-  .settings(
-    scalaVersion := Settings.versions.scala,
-    libraryDependencies ++= Settings.sharedDependencies.value
-  )
-  // set up settings specific to the JS project
-  .jsConfigure(_ enablePlugins ScalaJSWeb)
+lazy val shared =
+  (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file(
+    "shared"))
+    .settings(
+      scalaVersion := Settings.versions.scala,
+      libraryDependencies ++= Settings.sharedDependencies.value
+    )
+    // set up settings specific to the JS project
+    .jsConfigure(_ enablePlugins ScalaJSWeb)
 
 lazy val sharedJVM = shared.jvm.settings(name := "sharedJVM")
 
 lazy val sharedJS = shared.js.settings(name := "sharedJS")
 
 // use eliding to drop some debug code in the production build
-lazy val elideOptions = settingKey[Seq[String]]("Set limit for elidable functions")
+lazy val elideOptions =
+  settingKey[Seq[String]]("Set limit for elidable functions")
 
 // instantiate the JS project for SBT with some additional settings
 lazy val client: Project = (project in file("client"))
@@ -30,8 +34,8 @@ lazy val client: Project = (project in file("client"))
     elideOptions := Seq(),
     scalacOptions ++= elideOptions.value,
     jsDependencies ++= Settings.jsDependencies.value,
-    // RuntimeDOM is needed for tests
-    jsDependencies += RuntimeDOM % "test",
+    // JS env equipped with the DOM is needed for tests
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
     // yes, we want to package JS dependencies
     skip in packageJSDependencies := false,
     // use Scala.js provided launcher code to start the client app
@@ -56,8 +60,8 @@ lazy val server = (project in file("server"))
     resolvers += Resolver.bintrayRepo("guilgaly", "maven"),
     libraryDependencies ++= Settings.jvmDependencies.value,
     commands ++= Seq(
-        ReleaseCmd,
-        StageReleaseCmd
+      ReleaseCmd,
+      StageReleaseCmd
     ),
     // triggers scalaJSPipeline when using compile or continuous compilation
     compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
@@ -79,8 +83,9 @@ lazy val ReleaseCmd = customRelease("packageRelease", "dist")
 // Command for building a release which will be run in place
 lazy val StageReleaseCmd = customRelease("stageRelease", "stage")
 
-def customRelease(releaseCmd: String, buildCmd: String) = Command.command(releaseCmd) {
-    state => "set elideOptions in client := Seq(\"-Xelide-below\", \"WARNING\")" ::
+def customRelease(releaseCmd: String, buildCmd: String) =
+  Command.command(releaseCmd) { state =>
+    "set elideOptions in client := Seq(\"-Xelide-below\", \"WARNING\")" ::
       "client/clean" ::
       "client/test" ::
       "server/clean" ::
@@ -88,9 +93,10 @@ def customRelease(releaseCmd: String, buildCmd: String) = Command.command(releas
       s"server/$buildCmd" ::
       "set elideOptions in client := Seq()" ::
       state
-}
+  }
 
 // lazy val root = (project in file(".")).aggregate(client, server)
 
 // loads the Play server project at sbt startup
-onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
+onLoad in Global := (Command
+  .process("project server", _: State)) compose (onLoad in Global).value
